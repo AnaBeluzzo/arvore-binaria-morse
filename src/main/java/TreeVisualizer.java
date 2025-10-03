@@ -1,4 +1,5 @@
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
@@ -10,10 +11,28 @@ import javafx.stage.Stage;
 public class TreeVisualizer extends Application {
 
     private static ArvoreMorse arvore;
+    private static boolean javaFxStarted = false;
 
     // Método para injetar a árvore do sistema principal
     public static void setArvore(ArvoreMorse arvore) {
         TreeVisualizer.arvore = arvore;
+    }
+    
+    // Método para exibir nova janela
+    public static void exibirNovaJanela(ArvoreMorse arvoreParaExibir) {
+        arvore = arvoreParaExibir;
+        
+        if (!javaFxStarted) {
+            // Primeira vez - inicia o JavaFX
+            javaFxStarted = true;
+            new Thread(() -> Application.launch(TreeVisualizer.class)).start();
+        } else {
+            // JavaFX já rodando - cria nova janela
+            Platform.runLater(() -> {
+                Stage novaJanela = new Stage();
+                new TreeVisualizer().configurarJanela(novaJanela);
+            });
+        }
     }
 
     // Calcula a altura da árvore
@@ -95,11 +114,19 @@ public class TreeVisualizer extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        primaryStage.setTitle("Visualizador de Árvore Binária Morse");
+        // Configura para não sair quando todas as janelas forem fechadas
+        Platform.setImplicitExit(false);
+        
+        // Cria a primeira janela
+        configurarJanela(primaryStage);
+    }
+    
+    private void configurarJanela(Stage stage) {
+        stage.setTitle("Visualizador de Árvore Binária Morse");
 
         if (arvore == null || arvore.getRaiz() == null) {
             System.out.println("A árvore está vazia. Adicione letras antes de visualizar.");
-            primaryStage.close();
+            stage.close();
             return;
         }
 
@@ -122,7 +149,11 @@ public class TreeVisualizer extends Application {
         root.getChildren().add(canvas);
 
         Scene scene = new Scene(root, canvasWidth, canvasHeight);
-        primaryStage.setScene(scene);
-        primaryStage.show();
+        stage.setScene(scene);
+        
+        // Apenas fecha a janela, mas mantém o JavaFX rodando
+        stage.setOnCloseRequest(e -> stage.close());
+        
+        stage.show();
     }
 }

@@ -308,4 +308,11 @@ public class ArvoreMorse {
     public No getRaiz() {
         return raiz;
     }
+    
+    /**
+     * Limpa completamente a árvore, removendo todos os nós
+     */
+    public void limparArvore() {
+        this.raiz = null;
+    }
 }

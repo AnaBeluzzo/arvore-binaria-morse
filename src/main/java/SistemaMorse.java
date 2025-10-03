@@ -28,6 +28,7 @@ public class SistemaMorse {
         System.out.println("5 - Decodificar palavra");
         System.out.println("6 - Exibir árvore (JavaFX)");
         System.out.println("7 - Carregar alfabeto padrão");
+        System.out.println("8 - Limpar árvore");
         System.out.println("0 - Sair");
         System.out.println("========================================");
         System.out.print("Escolha uma opção: ");
@@ -141,7 +142,7 @@ public class SistemaMorse {
     }
     
     /**
-     * Placeholder para exibição com JavaFX
+     * Exibe a árvore usando JavaFX
      */
     private void exibirArvore() {
         System.out.println("\n[VISUALIZADOR JAVAFX]");
@@ -152,14 +153,10 @@ public class SistemaMorse {
         }
         
         System.out.println("Iniciando visualizador gráfico da árvore...");
-        System.out.println("Por favor, feche a janela gráfica para retornar ao menu.");
+        System.out.println("Uma nova janela será aberta.");
         
-        // Injeta a árvore atual no visualizador e o inicia
-        TreeVisualizer visualizer = new TreeVisualizer();
-        visualizer.setArvore(arvore);
-        
-        // Lança a aplicação JavaFX em uma nova thread para não bloquear o console
-        new Thread(() -> Application.launch(TreeVisualizer.class)).start();
+        // Exibe uma nova janela com a árvore atual
+        TreeVisualizer.exibirNovaJanela(arvore);
     }
     
     /**
@@ -181,6 +178,22 @@ public class SistemaMorse {
         
         System.out.println("✓ Alfabeto padrão carregado com sucesso!");
         System.out.println("  " + adicionadas + " caracteres adicionados (A-Z + 0-9)");
+    }
+    
+    /**
+     * Limpa completamente a árvore
+     */
+    private void limparArvore() {
+        System.out.print("\nTem certeza que deseja limpar toda a árvore? (S/N): ");
+        String confirmacao = scanner.nextLine().trim().toUpperCase();
+        
+        if (confirmacao.equals("S") || confirmacao.equals("SIM")) {
+            arvore.limparArvore();
+            System.out.println("✓ Árvore limpa com sucesso!");
+            System.out.println("  Todos os nós foram removidos.");
+        } else {
+            System.out.println("✗ Operação cancelada.");
+        }
     }
     
     /**
@@ -222,6 +235,9 @@ public class SistemaMorse {
                     break;
                 case "7":
                     carregarAlfabetoPadrao();
+                    break;
+                case "8":
+                    limparArvore();
                     break;
                 case "0":
                     System.out.println("\n✓ Encerrando sistema...");
