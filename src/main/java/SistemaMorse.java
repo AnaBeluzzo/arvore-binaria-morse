@@ -1,4 +1,5 @@
 import java.util.Scanner;
+import javafx.application.Application;
 
 /**
  * Sistema de Código Morse com Menu Interativo
@@ -143,15 +144,22 @@ public class SistemaMorse {
      * Placeholder para exibição com JavaFX
      */
     private void exibirArvore() {
-        System.out.println("\n[FUNCIONALIDADE RESERVADA PARA JAVAFX]");
-        System.out.println("Esta opção será implementada com interface gráfica JavaFX");
-        System.out.println("para visualização da árvore binária.");
+        System.out.println("\n[VISUALIZADOR JAVAFX]");
         
         if (arvore.getRaiz() == null) {
-            System.out.println("\nATENÇÃO: A árvore está vazia!");
-        } else {
-            System.out.println("\nA árvore contém elementos e está pronta para visualização.");
+            System.out.println("ATENÇÃO: A árvore está vazia! Adicione letras antes de visualizar.");
+            return;
         }
+        
+        System.out.println("Iniciando visualizador gráfico da árvore...");
+        System.out.println("Por favor, feche a janela gráfica para retornar ao menu.");
+        
+        // Injeta a árvore atual no visualizador e o inicia
+        TreeVisualizer visualizer = new TreeVisualizer();
+        visualizer.setArvore(arvore);
+        
+        // Lança a aplicação JavaFX em uma nova thread para não bloquear o console
+        new Thread(() -> Application.launch(TreeVisualizer.class)).start();
     }
     
     /**
